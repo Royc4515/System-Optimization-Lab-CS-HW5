@@ -2,13 +2,144 @@ Student: Roy Carmelli
 ID: [Your ID]
 
 --- PART 2A: Manual Optimization ---
-NeetCode Link: [Link to the problem you choose]
-Problem Name: [Name]
+NeetCode Link: https://neetcode.io/problems/buy-and-sell-crypto/question?list=neetcode150
+Problem Name: Best Time to Buy and Sell Stock
 My Answer:
-[We will paste your C code here]
+
+#include <limits.h>
+int maxProfit(int* prices, int pricesSize) {
+    //optimization 1: skip if less than 2 prices because there will be no profit
+    if (pricesSize < 2) return 0;
+    int max_pro = 0;
+    int min_buy = INT_MAX;
+    //optimization 2: use pointer arithmetic for faster access
+    int *end = prices+ pricesSize; //pointer to the end of the array
+    int *p = prices; //pointer to the current price
+    //optimization 3: loop unrolling
+    int *unroll_end = end - 4; //limit for loop unrolling
+    while (p <= unroll_end) {
+        //process 4 elements at a time
+        int p0= p[0];
+        int p1= p[1];
+        int p2= p[2];
+        int p3= p[3];
+        //optimization 4: branchless min/max calculation
+        //step 1
+        int pro0 = p0 - min_buy;
+        max_pro = (pro0 > max_pro) ? pro0 : max_pro;
+        min_buy = (p0 < min_buy) ? p0 : min_buy;
+        
+        //step 2
+        int pro1 = p1 - min_buy;
+        max_pro = (pro1 > max_pro) ? pro1 : max_pro;
+        min_buy = (p1 < min_buy) ? p1 : min_buy;
+
+        //step 3
+        int pro2 = p2 - min_buy;
+        max_pro = (pro2 > max_pro) ? pro2 : max_pro;
+        min_buy = (p2 < min_buy) ? p2 : min_buy;
+
+        //step 4
+        int pro3 = p3 - min_buy;
+        max_pro = (pro3 > max_pro) ? pro3 : max_pro;
+        min_buy = (p3 < min_buy) ? p3 : min_buy;
+        
+        p += 4;
+    }
+    //process remaining elements
+    while (p<end){
+        int price = *p;
+        //optimization 4: branchless min/max calculation
+        int pro = price - min_buy;
+        max_pro = (pro > max_pro) ? pro : max_pro;
+        min_buy = (price < min_buy) ? price : min_buy;
+        p++;
+    }
+    return max_pro;
+}
 
 --- PART 2B: Vibe Coding ---
-AI Tool Used: Gemini 1.5 Pro (via manual prompting)
-Problem Name: [Name of problem I solve]
+AI Tool Used: GitHub Copilot (via manual prompting)
+NeetCode Link: https://neetcode.io/problems/rotting-fruit/question
+Problem Name: Rotting Fruit (Oranges Rotting)
 AI Solution:
-[I will generate this code for you]
+
+from collections import deque
+from typing import List
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        """
+        Determines the minimum time (in minutes) for all fresh oranges to rot.
+        Uses BFS (Breadth-First Search) to simulate the spreading of rot.
+        
+        Args:
+            grid: 2D list where 0=empty, 1=fresh, 2=rotten
+            
+        Returns:
+            Minimum minutes for all fresh oranges to rot, or -1 if impossible
+        """
+        
+        # === SETUP PHASE ===
+        # Create a Queue
+        queue = deque()
+        
+        # Variable – Fresh Count (number of fresh oranges)
+        fresh_count = 0
+        
+        # Variable – Time (minutes passed)
+        time = 0
+        
+        # First Pass (Setup):
+        # Go through the entire matrix, cell by cell
+        for row in range(len(grid)):
+            for col in range(len(grid[0])):
+                # If the cell is Rotten:  Add it to the Queue immediately
+                if grid[row][col] == 2:
+                    queue.append((row, col))
+                # If the cell is Fresh: Add +1 to the Fresh Count
+                elif grid[row][col] == 1:
+                    fresh_count += 1
+                # If the cell is Empty: Do nothing
+        
+        # === MAIN LOOP (The Infection) ===
+        # Run this loop as long as the Queue is not empty AND Fresh Count > 0
+        while queue and fresh_count > 0:
+            # Start of Minute:  Add +1 to the Time
+            time += 1
+            
+            # The Wave:  Check the current size of the Queue
+            # We will only process this specific number of oranges (this represents one minute of spreading)
+            queue_size = len(queue)
+            
+            # For each orange in this current wave
+            for _ in range(queue_size):
+                row, col = queue.popleft()
+                
+                # Check its 4 adjacent neighbors (Up, Down, Left, Right)
+                neighbors = [(row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)]
+                
+                for neighbor_row, neighbor_col in neighbors: 
+                    # Bounds check
+                    if 0 <= neighbor_row < len(grid) and 0 <= neighbor_col < len(grid[0]):
+                        # If the neighbor is Fresh: 
+                        if grid[neighbor_row][neighbor_col] == 1:
+                            # Change it to Rotten in the matrix (so we don't count it twice)
+                            grid[neighbor_row][neighbor_col] = 2
+                            
+                            # Subtract 1 from the Fresh Count
+                            fresh_count -= 1
+                            
+                            # Add it to the Queue (it will infect others in the next minute)
+                            queue.append((neighbor_row, neighbor_col))
+                        
+                        # If the neighbor is Rotten or Empty:  Do nothing
+        
+        # === FINAL CHECK ===
+        # Check if Fresh Count is 0:
+        if fresh_count == 0:
+            # If yes:  We successfully rotted everything.  Return the Time.
+            return time
+        else:
+            # If no: Some oranges are isolated and safe. Return -1.
+            return -1
