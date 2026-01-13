@@ -1,5 +1,5 @@
 /* vowel_counting.c */
-/* 123456789 Israel Israeli */
+/* not gonna put my ID on Github :), Roy carmelli  */
 
 #include <stdbool.h>
 #include <stdio.h>
