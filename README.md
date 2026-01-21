@@ -1,4 +1,4 @@
-# 🚀 Computer Structure & Optimization Project
+# 🚀 System-Optimization-Lab-CS-HW5
 
 ![Language: C](https://img.shields.io/badge/Language-C-00599C?style=for-the-badge&logo=c&logoColor=white)
 ![Language: Python](https://img.shields.io/badge/Language-Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
@@ -13,7 +13,7 @@ Comprehensive computer architecture project focusing on **system-level optimizat
 ## 📂 Project Structure
 
 ```text
-CSHW5/
+System-Optimization-Lab-CS-HW5/
 ├── 🚀 Part 1/                  # Performance Optimization
 │   ├── main.c                  # Entry point (Driver)
 │   ├── vowel_counting.c        # [OPTIMIZED] Forking, LUTs, Unrolling
