@@ -320,7 +320,7 @@ def example_visualization_1():
         [1, 1, 1],
         [1, 1, 1]
     ]
-    visualizer = RottingFruitVisualizer(grid, speed=1.0)
+    visualizer = RottingFruitVisualizer(grid, speed=0.5)
     visualizer.print_simulation_summary()
     visualizer.create_visualization()
 
@@ -334,7 +334,7 @@ def example_visualization_2():
         [0, 1, 1, 1, 1],
         [1, 1, 1, 0, 2]
     ]
-    visualizer = RottingFruitVisualizer(grid, speed=1.0)
+    visualizer = RottingFruitVisualizer(grid, speed=0.5)
     visualizer.print_simulation_summary()
     visualizer.create_step_by_step_visualization(minutes_to_show=6)
 
@@ -346,7 +346,7 @@ def example_visualization_3():
         [0, 0, 0],
         [1, 1, 1]
     ]
-    visualizer = RottingFruitVisualizer(grid, speed=1.0)
+    visualizer = RottingFruitVisualizer(grid, speed=0.5)
     visualizer.print_simulation_summary()
     visualizer.create_visualization()
 
